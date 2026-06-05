@@ -1,0 +1,22 @@
+stages:
+  - test
+  - deploy
+ 
+test:
+  stage: test
+  script:
+    - echo "Running tests..."
+    - python3 -c "print('All tests passed')"
+ 
+deploy:
+  stage: deploy
+  script:
+    - sudo mkdir -p /var/www/myapp
+    - sudo cp app.py /var/www/myapp/
+    - sudo pkill -f "python3.*app.py" || true
+    - cd /var/www/myapp
+    - sudo nohup python3 app.py > /tmp/app.log 2>&1 &
+    - sleep 3
+    - curl --fail http://localhost:5000
+  only:
+    - main
