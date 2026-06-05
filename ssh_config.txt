@@ -1,0 +1,4 @@
+SSH Hardening: PermitRootLogin no
+PasswordAuthentication no
+PermitRootLogin no
+PasswordAuthentication no
