@@ -1,0 +1,28 @@
+[Unit]
+Description=Flask status app (gunicorn)
+After=network.target
+
+[Service]
+User=myapp
+Group=myapp
+WorkingDirectory=/opt/myapp/current
+EnvironmentFile=-/opt/myapp/version.env
+ExecStart=/opt/myapp/venv/bin/gunicorn --workers 2 --bind 127.0.0.1:8000 --access-logfile - app:app
+Restart=on-failure
+RestartSec=2
+
+# Sandboxing: the service only needs to read its own files and listen on a local port.
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

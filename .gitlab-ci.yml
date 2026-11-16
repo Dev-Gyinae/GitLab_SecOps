@@ -1,22 +1,42 @@
 stages:
+  - lint
   - test
   - deploy
- 
+
+variables:
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+# Shared setup for jobs that need the Python toolchain. The shell executor
+# gives every job a fresh checkout, so each job builds its own virtualenv.
+.python:
+  before_script:
+    - python3 -m venv .venv
+    - . .venv/bin/activate
+    - pip install --quiet -r requirements-dev.txt
+
+lint:
+  extends: .python
+  stage: lint
+  script:
+    - flake8 app.py tests
+
 test:
+  extends: .python
   stage: test
   script:
-    - echo "Running tests..."
-    - python3 -c "print('All tests passed')"
- 
+    - pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+# The runner user may not do anything as root except run this one script
+# (see /etc/sudoers.d/gitlab-runner-deploy, created by scripts/provision.sh).
+# The script validates its arguments, restarts the service, checks /health
+# and rolls back to the previous release if the check fails.
 deploy:
   stage: deploy
   script:
-    - sudo mkdir -p /var/www/myapp
-    - sudo cp app.py /var/www/myapp/
-    - sudo pkill -f "python3.*app.py" || true
-    - cd /var/www/myapp
-    - sudo nohup python3 app.py > /tmp/app.log 2>&1 &
-    - sleep 3
-    - curl --fail http://localhost:5000
-  only:
-    - main
+    - sudo /usr/local/bin/deploy-myapp "$CI_PROJECT_DIR" "$CI_COMMIT_SHORT_SHA"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

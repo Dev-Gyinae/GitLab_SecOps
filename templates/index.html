@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Secure CI/CD with Flask and GitLab</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Secure CI/CD with Flask and GitLab</h1>
+    <p class="lead">
+      A small Flask service deployed by a self-hosted GitLab CI/CD pipeline
+      onto a hardened Ubuntu server.
+    </p>
+
+    <h2>What this deployment demonstrates</h2>
+    <ul>
+      <li>Self-hosted GitLab CE with a shell-executor runner</li>
+      <li>Lint, test and deploy pipeline with a post-deploy health check and rollback</li>
+      <li>Least-privilege deployment through a single sudo-allowed script</li>
+      <li>Server hardening: UFW, Fail2ban, key-only SSH, automatic security updates</li>
+      <li>Application served by gunicorn under systemd behind nginx</li>
+    </ul>
+
+    <h2>Running instance</h2>
+    <dl>
+      <dt>Version</dt><dd>{{ version }}</dd>
+      <dt>Process started</dt><dd>{{ started_at }}</dd>
+    </dl>
+    <p class="meta">Machine-readable endpoints: <code>/health</code>, <code>/version</code></p>
+  </main>
+</body>
+</html>
