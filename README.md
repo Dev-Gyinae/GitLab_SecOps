@@ -22,3 +22,6 @@
 ## CI/CD Pipeline Stages
 1. **test** - Validates application code
 2. **deploy** - Copies app to /var/www/myapp and starts service
+
+
+work on it again to make it a portfolio worthy project 
