@@ -132,3 +132,28 @@ Planned next, as a second pipeline iteration:
 ## Background
 
 Built as the practical project for a DevSecOps engineer role application. Everything, from the VM and GitLab installation through runner registration, the pipeline and the hardening, was set up from scratch.
+
+## Publishing to GitHub (maintainer notes)
+
+The project is developed on a private GitLab instance and mirrored to GitHub. To publish this revision as a new repository:
+
+1. Unzip the project into a new folder.
+2. On GitHub, create an empty repository (no README, license or .gitignore), for example `secure-cicd-flask-gitlab`.
+3. Verify locally before pushing:
+   ```bash
+   python3 -m venv .venv && . .venv/bin/activate
+   pip install -r requirements-dev.txt
+   flake8 app.py tests && pytest
+   ```
+4. Commit and push:
+   ```bash
+   git init -b main
+   git add -A
+   git commit -m "Secure CI/CD pipeline: Flask and GitLab on a hardened Linux server"
+   git remote add origin https://github.com/<your-user>/secure-cicd-flask-gitlab.git
+   git push -u origin main
+   ```
+5. Add a short repository description and topics such as `devsecops`, `gitlab-ci`, `flask`, `linux-hardening` and `ci-cd`.
+6. Archive or delete the previous repository. Its history contains the original plaintext GitLab password, which stays public until the old repository is removed.
+
+After the first test deployment on a fresh VM, remove the status note at the top of this file and add screenshots of a passing pipeline and the running application.
